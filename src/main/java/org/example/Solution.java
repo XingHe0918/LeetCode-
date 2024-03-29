@@ -589,6 +589,6 @@ public class Solution {
             }
         }
         return list.toArray(new int[list.size()][]);
-    }1
+    }
 
 }
