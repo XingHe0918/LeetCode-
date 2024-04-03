@@ -591,4 +591,271 @@ public class Solution {
         return list.toArray(new int[list.size()][]);
     }
 
+
+    Set<Integer> xSet = new HashSet<>();
+    Set<Integer> ySet = new HashSet<>();
+    public void setZeroes(int[][] matrix){
+
+        for (int i = 0; i < matrix.length; i++){
+            if (xSet.contains(i))continue;
+            for (int j = 0; j < matrix[0].length; j++){
+                if (ySet.contains(j))continue;
+                if (matrix[i][j] == 0){
+                    setZeroesTestX(matrix,i,j);
+                    setZeroesTestY(matrix,i,j);
+                    break;
+                }
+
+            }
+        }
+
+    }
+
+    public void setZeroesTestX(int[][] matrix, int x, int y) {
+        xSet.add(x);
+        for (int i = 0; i < matrix.length; i++) {
+            if (matrix[i][y] == 0 && i != x){
+                if (xSet.contains(i))continue;
+                xSet.add(i);
+                setZeroesTestY(matrix, i, y);
+            }
+            matrix[i][y] = 0;
+        }
+
+    }
+    public void setZeroesTestY(int[][] matrix, int x, int y) {
+        ySet.add(y);
+        for (int i = 0; i < matrix[0].length; i++) {
+            if (matrix[x][i] == 0 && i != y){
+                if (ySet.contains(i))continue;
+                ySet.add(i);
+                setZeroesTestX(matrix, x, i);
+            }
+            matrix[x][i] = 0;
+        }
+    }
+
+    public List<Integer> spiralOrder(int[][] matrix) {
+
+        int top = 0;
+        int left = 0;
+        int right = matrix[0].length - 1;
+        int bottom = matrix.length - 1;
+        List<Integer> list = new ArrayList<>();
+        while (true){
+
+            for (int i = left; i <= right; i++)list.add(matrix[top][i]);
+            if (++top > bottom)break;
+            for (int i = top; i <= bottom; i++)list.add(matrix[i][right]);
+            if (--right < left)break;
+            for (int i = right; i >= left; i--)list.add(matrix[bottom][i]);
+            if (--bottom < top)break;
+            for (int i = bottom; i >= top; i--)list.add(matrix[i][left]);
+            if (++left > right)break;
+
+        }
+
+        return list;
+    }
+
+    public void rotate(int[][] matrix) {
+
+        int bottom = matrix.length - 1;
+        int right = matrix[0].length - 1;
+
+        for (int i = 0; i < bottom; i++){
+
+            for (int j = 0; j < right - i; j++){
+                int num = matrix[i][j];
+                matrix[i][j] = matrix[bottom - j][right - i];
+                matrix[bottom - j][right - i] = num;
+            }
+        }
+        for (int i = 0; i < matrix.length/2; i++){
+            int[] nums = matrix[i];
+            matrix[i] = matrix[bottom - i];
+            matrix[bottom - i] = nums;
+        }
+    }
+
+    public boolean searchMatrix(int[][] matrix, int target) {
+
+        int top = 0;
+        int left = 0;
+        int right = matrix[0].length - 1;
+        int bottom = matrix.length - 1;
+        int i;
+        while (true){
+
+            for ( i = left; i <= right && matrix[top][i] < target; i++);
+            if (i > right)i--;
+            if (matrix[top][i] == target)return true;
+            if ((right = i - 1) < left)break;
+            for ( i = top; i <= bottom && matrix[i][right] < target; i++);
+            if (i > bottom)i--;
+            if (matrix[right][i] == target)return true;
+            if ((bottom = i) < top )break;
+            bottom--;
+            for ( i = right; i >= left && matrix[bottom][i] > target; i--);
+            if (i < left)i++;
+            if (matrix[bottom][i] == target)return true;
+            if ((left = i) > right)break;
+            left--;
+            for ( i = bottom; i >= top && matrix[i][left] > target; i--);
+            if (i < top)i++;
+            if (matrix[left][i] == target)return true;
+            if ((top = i) > bottom)break;
+            top--;
+
+        }
+        return false;
+    }
+
+    public boolean isValidSudoku(char[][] board) {
+
+        Set<Character> xSet = new HashSet<>();
+        Set<Character> ySet = new HashSet<>();
+
+        for (int i = 0; i < 9; i++){
+            for (int j = 0; j < 9; j++){
+                if (xSet.contains(board[i][j]) || ySet.contains(board[j][i]))return false;
+                if (board[i][j] != '.')xSet.add(board[i][j]);
+                if (board[j][i] != '.')ySet.add(board[j][i]);
+            }
+            xSet.clear();
+            ySet.clear();
+        }
+
+        for(int i = 0; i < 9; i = i + 3){
+            for (int j = 0; j < 9; j = j + 3){
+                for (int n = i; n < i + 3; n++){
+                    for (int m = j; m < j + 3; m++){
+                        if (xSet.contains(board[n][m]))return false;
+                        if (board[n][m] != '.')xSet.add(board[n][m]);
+                    }
+                }
+                xSet.clear();
+
+            }
+        }
+
+        return true;
+
+    }
+
+
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        Map<ListNode,Integer> map = new HashMap<>();
+        ListNode p = headA;
+        while (p != null){
+            map.put(p,p.val);
+            p = p.next;
+        }
+        p = headB;
+        while (p != null){
+            if (map.containsKey(p))return p;
+            p = p.next;
+        }
+        return null;
+    }
+
+    public ListNode reverseList(ListNode head) {
+
+        ListNode HEAD = null;
+        ListNode P = head,p;
+        while (P != null){
+            p = P.next;
+            P.next = HEAD;
+            HEAD = P;
+            P = p;
+        }
+        return HEAD;
+    }
+
+    public boolean isPalindrome(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while(slow != null && fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        fast = new ListNode(slow.val);
+        ListNode reHead = fast;
+        slow = slow.next;
+        while (slow != null){
+            ListNode reSlow = new ListNode(slow.val);
+            fast.next = reSlow;
+            fast = reSlow;
+            slow = slow.next;
+        }
+        reHead = reverseList(reHead);
+        ListNode P = head;
+        while (reHead != null){
+            if (reHead.val != P.val)return false;
+            P = P.next;
+            reHead = reHead.next;
+        }
+        return true;
+
+    }
+
+    public ListNode detectCycle(ListNode head) {
+
+        ListNode p = head;
+
+        Set<ListNode> set = new HashSet<>();
+        while (p != null){
+            if (set.contains(p))return p;
+            set.add(p);
+            p = p.next;
+        }
+
+        return null;
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+
+        ListNode p1 = l1;
+        ListNode p2 = l2;
+        ListNode listNode = new ListNode();
+        ListNode p = listNode;
+        int num = 0;
+        int sum = 0;
+        while (p1 != null && p2 != null){
+            sum = p1.val + p2.val + num;
+            p.val = sum % 10  ;
+            num = sum / 10;
+            if (p1.next != null && p2.next != null){
+                p.next = new ListNode();
+                p = p.next;
+            }
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+
+        while (p1 != null){
+            sum = p1.val + num;
+            p.next = new ListNode(sum % 10);
+            num = sum / 10;
+            p1 = p1.next;
+            p = p.next;
+        }
+
+        while (p2 != null){
+            sum = p2.val + num;
+            p.next = new ListNode(sum % 10);
+            num = sum / 10;
+            p2 = p2.next;
+            p = p.next;
+        }
+
+        if (num != 0){
+            p.next = new ListNode(num);
+        }
+
+        ListNode.printList(listNode);
+        return listNode;
+    }
+
 }
