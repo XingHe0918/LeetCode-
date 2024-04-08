@@ -28,12 +28,13 @@ public class Main {
 //        int[] listNodeNum = {
 //                3,2,0,-4
 //        };
-        int[] p1 = {9,9,9,9,9,9,9};
-        int[] p2 = {9,9,9,9};
+        int[] p1 = {4,2,1,3};
+        int[] p2 = {1,3,4};
 
 //        ListNode listNode = ListNode.arrayToList(listNodeNum);
         Solution solution = new Solution();
-        solution.addTwoNumbers(ListNode.arrayToList(p1),ListNode.arrayToList(p2));
+//        solution.mergeTwoLists(ListNode.arrayToList(p1),ListNode.arrayToList(p2));
+        solution.sortList(ListNode.arrayToList(p1));
 //        ListNode.printList(solution.reverseList(listNode));
     }
 }

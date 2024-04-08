@@ -858,4 +858,245 @@ public class Solution {
         return listNode;
     }
 
+
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+
+        if (list1 == null && list2 == null)return null;
+
+        ListNode P = new ListNode();
+        ListNode HEAD = P;
+        ListNode p1 = list1;
+        ListNode p2 = list2;
+
+        while (p1 != null && p2 != null){
+
+            if (p1.val < p2.val){
+                P.next = new ListNode(p1.val);
+                P = P.next;
+                p1 = p1.next;
+            } else {
+                P.next = new ListNode(p2.val);
+                P = P.next;
+                p2 = p2.next;
+            }
+        }
+
+        if (p1 != null){
+            P.next = p1;
+        }
+        if (p2 != null){
+            P.next = p2;
+        }
+
+        ListNode.printList(HEAD.next);
+        return HEAD.next;
+    }
+
+
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+
+        ListNode p = head;
+        int m = 0;
+        while (p != null){
+            p = p.next;
+            m++;
+        }
+
+        p = head;
+        if (m - n != 0){
+            for (int i = 0; i < m - n - 1; i++)p = p.next;
+            p.next = p.next.next;
+        }else {
+            if (m == 1){
+                head = null;
+            } else {
+              head = head.next;
+            }
+        }
+        ListNode.printList(head);
+        return head;
+    }
+
+    public ListNode swapPairs(ListNode head) {
+
+        ListNode p = head;
+        while (p != null){
+
+            if (p.next != null){
+                int num = p.val;
+                p.val = p.next.val;
+                p.next.val = num;
+                p = p.next;
+            }
+            p = p.next;
+
+        }
+
+        ListNode.printList(head);
+        return head;
+
+
+    }
+
+    public Node copyRandomList(Node head) {
+
+        Node head_p = head;
+        Map<Node,Integer> head_map = new HashMap<>();
+        int n = 0;
+        while (head_p != null){
+            head_map.put(head_p,n++);
+            head_p = head_p.next;
+        }
+        Node HEAD = new Node(0);
+        Node HEAD_P = HEAD;
+        head_p = head;
+        n = 0;
+        Map<Integer,Node> HEAD_MAP = new HashMap<>();
+        while (head_p != null){
+            HEAD_P.next = new Node(head_p.val);
+            HEAD_P = HEAD_P.next;
+            HEAD_MAP.put(n++,HEAD_P);
+            head_p = head_p.next;
+        }
+        for (int item : HEAD_MAP.keySet()){
+            System.out.println(HEAD_MAP.get(item).val+" === "+ item);
+        }
+        for (Node item : head_map.keySet()){
+            System.out.println(item.val+" === "+ head_map.get(item));
+        }
+        head_p = head;
+        HEAD_P = HEAD.next;
+        while (head_p != null && HEAD_P != null){
+
+            if (head_p.random != null){
+                int x =  head_map.get(head_p.random);
+                HEAD_P.random = HEAD_MAP.get(x);
+            }
+            HEAD_P = HEAD_P.next;
+            head_p = head_p.next;
+        }
+
+
+        return HEAD.next;
+    }
+
+
+
+    public ListNode sortList(ListNode head) {
+        if (head == null)return null;
+        ListNode head_p = head;
+        ListNode HEAD = new ListNode();
+        List<Integer> list = new ArrayList<>();
+        while (head_p != null){
+            list.add(head_p.val);
+            head_p = head_p.next;
+        }
+        list.sort(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1.compareTo(o2);
+            }
+        });
+        ListNode HEAD_P = HEAD;
+        for (Integer item : list){
+            HEAD_P.next = new ListNode(item);
+            HEAD_P = HEAD_P.next;
+        }
+        ListNode.printList(HEAD.next);
+        return HEAD.next;
+    }
+
+    public List<Integer> inorderTraversal(TreeNode root) {
+
+        List<Integer> list = new ArrayList<>();
+        inorderTraversal_Text(root,list);
+        return list;
+
+    }
+
+    public boolean inorderTraversal_Text(TreeNode node,List<Integer> list){
+        if (node == null)return false;
+        inorderTraversal_Text(node.left,list);
+        list.add(node.val);
+        inorderTraversal_Text(node.right,list);
+        return true;
+    }
+
+    public int maxDepth(TreeNode root) {
+
+        int max = 0;
+        int index = 0;
+        maxDepth_Text(root,max,index);
+        return max;
+    }
+
+    public int maxDepth_Text(TreeNode root, int max, int index) {
+        System.out.println(index);
+        if (root == null)return index;
+
+        max = Math.max(max, maxDepth_Text(root.left,max,index++));
+
+        max = Math.max(max, maxDepth_Text(root.right,max,index++));
+
+        return 1;
+    }
+
+    public TreeNode invertTree(TreeNode root) {
+
+        invertTree_Test(root);
+        return root;
+
+    }
+
+    public boolean invertTree_Test(TreeNode node) {
+        if (node == null)return false;
+        invertTree(node.left);
+        invertTree(node.right);
+        TreeNode p = node.left;
+        node.left = node.right;
+        node.right = p;
+        return true;
+
+    }
+
+    public boolean isSymmetric(TreeNode root) {
+
+        if (root == null)return true;
+
+        return isSymmetric_Test(root.left,root.right);
+
+    }
+
+    public boolean isSymmetric_Test(TreeNode left_node, TreeNode right_node) {
+        if (left_node== null && right_node == null)return true;
+        if (left_node == null || right_node == null)return false;
+        if (left_node.val == right_node.val){
+            if (isSymmetric_Test(left_node.left, right_node.right)){
+                return isSymmetric_Test(left_node.right, right_node.left);
+            };
+        }
+        return false;
+    }
+
+    TreeNode p;
+    public boolean isValidBST(TreeNode root) {
+        p = root;
+        if (root == null)return false;
+        if (root.left != null && root.left.val >= root.val)return false;
+        if (root.right != null && root.right.val <= root.val)return false;
+        if (isValidBST_Test(root.left,root,0))return isValidBST_Test(root.right,root,1);
+        return false;
+    }
+
+    public boolean isValidBST_Test(TreeNode node,TreeNode node_ptr,int n) {
+        if (node == null)return true;
+        if (node.left != null && node.left.val >= node.val)return false;
+        if (n == 1 && node.left != null && node.left.val <= node_ptr.val) return false;
+        if (node.right != null && node.right.val <= node.val)return false;
+        if (n==0 && node.right != null && node.right.val >= node_ptr.val)return false;
+        if (isValidBST_Test(node.left,node_ptr,0))return isValidBST_Test(node.right,node_ptr,1);
+        return false;
+    }
+
+
 }
